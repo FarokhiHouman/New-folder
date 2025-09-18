@@ -1,0 +1,67 @@
+<UserControl x:Class="Slb.Production.Engineering.Views.Well.Tubulars.BoreholeTubingDetailView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ui="https://slb.production.engineering.ui"
+             xmlns:Properties="http://slb.production.engineering.common"
+             xmlns:Units="clr-namespace:Slb.Production.Engineering.Model.StandardDomain.Units;assembly=Slb.Production.Engineering.Model.StandardDomain"
+             xmlns:properties="clr-namespace:Slb.Production.Engineering.Model.StandardDomain.Properties;assembly=Slb.Production.Engineering.Model.StandardDomain">
+  <DockPanel Grid.IsSharedSizeScope="true">
+    <ui:CustomExpander IsPageHeader="true" DockPanel.Dock="Top"
+                       Header="{Binding ExpanderHeaderTitle, UpdateSourceTrigger=PropertyChanged}">
+      <StackPanel>
+        <ContentControl IsTabStop="false">
+          <ui:LabledStringContentItem Label="{x:Static properties:CoreStrings.Name}"
+                                      Value="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        </ContentControl>
+        <ContentControl IsTabStop="false" Visibility="{Binding IsOpenHole, Converter={StaticResource InvBoolToVis}}">
+          <ui:CollectionContentItem Label="{x:Static properties:CoreStrings.Grade}"
+                                    SelectedValue="{Binding GradeDisplay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    Collection="{Binding GradeList}"/>
+        </ContentControl>
+        <ContentControl IsTabStop="false" Visibility="{Binding IsOpenHole, Converter={StaticResource InvBoolToVis}}">
+          <ui:LabledUnitTextControl Label="{x:Static properties:CoreStrings.Density}" PropName="Density"/>
+        </ContentControl>
+        <ContentControl IsTabStop="false" Visibility="{Binding IsOpenHole, Converter={StaticResource InvBoolToVis}}">
+          <ui:LabledUnitTextControl Label="{x:Static properties:CoreStrings.ThermalConductivityLabel}" PropName="ThermalConductivity"/>
+        </ContentControl>
+        <ContentControl IsTabStop="false" Visibility="{Binding ShowBoreholeDiameter, Converter={StaticResource BoolToVis}}">
+          <ui:LabledUnitTextControl Label="{x:Static properties:CoreStrings.BoreholeDiameter}" PropName="BoreholeDiameter"/>
+        </ContentControl>
+      </StackPanel>
+    </ui:CustomExpander>
+    <ui:CustomExpander Header="{x:Static properties:CoreStrings.AnnulusMaterial}" AllowCollapse="true"
+                       Visibility="{Binding CanShowAnnulusMaterial, Converter={StaticResource BoolToVis}}">
+      <StackPanel>
+        <ContentControl IsTabStop="false" Visibility="{Binding ShowCement, Converter={StaticResource BoolToVis}}">
+          <ui:LabledUnitTextControl Label="{x:Static properties:CoreStrings.CementTop}" PropName="CementTop"
+                                    UnitMeasurement="{x:Static Units:Measurements.MeasuredDepth}" IsReadOnly="false"/>
+        </ContentControl>
+        <ContentControl IsTabStop="false" Visibility="{Binding ShowCement, Converter={StaticResource BoolToVis}}">
+          <ui:LabledUnitTextControl Label="{x:Static properties:CoreStrings.CementDensity}" PropName="CementDensity"
+                                    UnitMeasurement="{x:Static Units:Measurements.DrillingDensity}" IsReadOnly="false"/>
+        </ContentControl>
+        <ContentControl IsTabStop="false" Visibility="{Binding ShowCement, Converter={StaticResource BoolToVis}}">
+          <ui:LabledUnitTextControl Label="{x:Static properties:CoreStrings.CementThermalConductivityLabel}"
+                                    PropName="CementThermalConductivity" IsReadOnly="false"/>
+        </ContentControl>
+        <ContentControl Visibility="{Binding ShowAnnulusMaterial, Converter={StaticResource BoolToVis}}">
+          <ui:CollectionContentItem x:Name="CboAnnulusMaterialType" IsReadOnly="false" Label="{Binding AnnulusMaterialTypeString}"
+                                    SelectedValue="{Binding AnnulusMaterialType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    Collection="{Binding AnnulusMaterialTypes}"/>
+        </ContentControl>
+        <ContentControl IsTabStop="false" Visibility="{Binding ShowAnnulusMaterial, Converter={StaticResource BoolToVis}}">
+          <ui:LabledUnitTextControl Label="{x:Static properties:CoreStrings.AnnulusMaterialDensity}" PropName="AnnulusMaterialDensity"
+                                    UnitMeasurement="{x:Static Units:Measurements.DrillingDensity}" IsReadOnly="false"
+                                    DefaultValue="{Binding DefaultAnnulusMaterialDensity, UpdateSourceTrigger=PropertyChanged}"/>
+        </ContentControl>
+        <ContentControl IsTabStop="false" Visibility="{Binding ShowAnnulusMaterial, Converter={StaticResource BoolToVis}}">
+          <ui:LabledUnitTextControl Label="{x:Static properties:CoreStrings.FluidThermalConductivityLabel}"
+                                    PropName="FluidThermalConductivity" IsReadOnly="false"
+                                    DefaultValue="{Binding DefaultAnnulusMaterialThermalConductivity, UpdateSourceTrigger=PropertyChanged}"/>
+        </ContentControl>
+      </StackPanel>
+    </ui:CustomExpander>
+  </DockPanel>
+</UserControl>

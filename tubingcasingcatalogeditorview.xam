@@ -1,0 +1,34 @@
+<UserControl x:Class="Slb.Production.Engineering.Views.Well.TubingCasingCatalogEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ui="https://slb.production.engineering.ui"
+             xmlns:common="https://slb.production.engineering.common"
+             xmlns:Units="clr-namespace:Slb.Production.Engineering.Model.StandardDomain.Units;assembly=Slb.Production.Engineering.Model.StandardDomain"
+             xmlns:str_properties="clr-namespace:Slb.Production.Engineering.Model.StandardDomain.Properties;assembly=Slb.Production.Engineering.Model.StandardDomain">
+  <ui:CustomExpander Grid.IsSharedSizeScope="true">
+    <StackPanel>
+      <ContentControl>
+        <ui:LabledStringContentItem Label="{x:Static str_properties:CoreStrings.Catalog}" Value="{Binding Catalog, Mode=TwoWay}"
+                                    IsReadOnly="{Binding UserDefined, Converter={StaticResource InvBool}}"/>
+      </ContentControl>
+      <ui:LabledUnitTextControl Label="{x:Static str_properties:CoreStrings.OutsideDiameter}" PropName="OutsideDiameter"
+                                UnitMeasurement="{x:Static Units:Measurements.InsideDiameter}"
+                                IsReadOnly="{Binding UserDefined, Converter={StaticResource InvBool}}"/>
+      <ui:LabledUnitTextControl Label="{x:Static str_properties:CoreStrings.InsideDiameter}" PropName="InsideDiameter"
+                                UnitMeasurement="{x:Static Units:Measurements.InsideDiameter}"
+                                IsReadOnly="{Binding UserDefined, Converter={StaticResource InvBool}}"/>
+      <ui:LabledUnitTextControl Label="{x:Static str_properties:CoreStrings.Roughness}" PropName="Roughness"
+                                UnitMeasurement="{x:Static Units:Measurements.InsideDiameter}"
+                                IsReadOnly="{Binding UserDefined, Converter={StaticResource InvBool}}"/>
+      <ui:LabledUnitTextControl Label="{x:Static str_properties:CoreStrings.Weight}" PropName="Weight"
+                                UnitMeasurement="{x:Static Units:Measurements.MassPerLength}"
+                                IsReadOnly="{Binding UserDefined, Converter={StaticResource InvBool}}"/>
+      <ContentControl>
+        <ui:LabledStringContentItem Label="{x:Static str_properties:CoreStrings.Grade}" Value="{Binding Grade, Mode=TwoWay}"
+                                    IsReadOnly="{Binding UserDefined, Converter={StaticResource InvBool}}"/>
+      </ContentControl>
+    </StackPanel>
+  </ui:CustomExpander>
+</UserControl>

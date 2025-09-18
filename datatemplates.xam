@@ -1,0 +1,35 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:localViewsWell="clr-namespace:Slb.Production.Engineering.Views.Well"
+                    xmlns:tubulars="clr-namespace:Slb.Production.Engineering.Views.Well.Tubulars">
+  <DataTemplate DataType="{x:Type localViewsWell:PackerViewModel}">
+    <localViewsWell:PackerView/>
+  </DataTemplate>
+  <DataTemplate DataType="{x:Type localViewsWell:SSSVViewModel}">
+    <localViewsWell:SSSVView/>
+  </DataTemplate>
+  <DataTemplate DataType="{x:Type localViewsWell:FlowControlValveViewModel}">
+    <localViewsWell:FlowControlValveView/>
+  </DataTemplate>
+  <DataTemplate DataType="{x:Type localViewsWell:SlidingSleeveViewModel}">
+    <localViewsWell:SlidingSleeveView/>
+  </DataTemplate>
+  <DataTemplate DataType="{x:Type localViewsWell:TubingPlugViewModel}">
+    <localViewsWell:TubingPlugView/>
+  </DataTemplate>
+  <DataTemplate DataType="{x:Type tubulars:BoreholeTubingDetailViewModel}">
+    <tubulars:BoreholeTubingDetailView/>
+  </DataTemplate>
+  <DataTemplate DataType="{x:Type localViewsWell:ESPViewModel}">
+    <localViewsWell:ESPView/>
+  </DataTemplate>
+  <DataTemplate DataType="{x:Type localViewsWell:PCPViewModel}">
+    <localViewsWell:PCPView/>
+  </DataTemplate>
+  <DataTemplate DataType="{x:Type localViewsWell:RodPumpViewModel}">
+    <localViewsWell:RodPumpView/>
+  </DataTemplate>
+  <DataTemplate DataType="{x:Type localViewsWell:GasLiftInjectionViewModel}">
+    <localViewsWell:GasLiftInjectionCommonView/>
+  </DataTemplate>
+</ResourceDictionary>

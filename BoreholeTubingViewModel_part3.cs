@@ -1,0 +1,11 @@
+﻿ontent<GridItemCollection<ViewModelGridItem<TubingSection>>>(new GridItemCollection<ViewModelGridItem<TubingSection>>(ViewModel.CurrentDispatcher, new Action<ViewModelGridItem<TubingSection>>(this.InitializeTailTubingSection)));
+    this.CasingSections = this.RegisterContent<GridItemCollection<ViewModelGridItem<TubingSection>>>(new GridItemCollection<ViewModelGridItem<TubingSection>>(ViewModel.CurrentDispatcher, new Action<ViewModelGridItem<TubingSection>>(this.InitializeCasingSection)));
+    this.SelectedDetailedCasings = new ObservableCollection<ViewModelGridItem<TubingSection>>();
+    this.SelectedDetailedTubings = new ObservableCollection<ViewModelGridItem<TubingSection>>();
+    this.SelectedDetailedTailTubings = new ObservableCollection<ViewModelGridItem<TubingSection>>();
+    this.RegisterSubscription((ISubscription) (this._aggregateSubscription = new AggregateSubscription(new EventHandler<AggregateEventArgs>(this.TubingSectionChanged))));
+    this._selectedDetailedTubingsChangedSubscription = this.RegisterSubscription((ISubscription) new CollectionChangedSubscription((INotifyCollectionChanged) this.SelectedDetailedTubings, new NotifyCollectionChangedEventHandler(this.SelectedDetailedTubingsChanged)));
+    this._selectedDetailedTailTubingsChangedSubscription = this.RegisterSubscription((ISubscription) new CollectionChangedSubscription((INotifyCollectionChanged) this.SelectedDetailedTailTubings, new NotifyCollectionChangedEventHandler(this.SelectedDetailedTailTubingsChanged)));
+    this._selectedDetailedCasingsChangedSubscription = this.RegisterSubscription((ISubscription) new CollectionChangedSubscription((INotifyCollectionChanged) this.SelectedDetailedCasings, new NotifyCollectionChangedEventHandler(this.SelectedDetailedCasingsChanged)));
+    this.InitializeSections();
+    this.DeleteSelectedItemsCommand = (ICommand) new RelayCommand(new Action<object>(this.DeleteSelectedItems), new Predicate<object>(BoreholeTubingViewModel.CanDeleteSelectedItems));

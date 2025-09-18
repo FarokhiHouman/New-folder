@@ -1,0 +1,108 @@
+<UserControl x:Class="Slb.Production.Engineering.Views.Well.BoreholeDeviationSurveysView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="https://slb.production.engineering.ui"
+             xmlns:data="clr-namespace:Slb.Production.Engineering.Model.StandardDomain;assembly=Slb.Production.Engineering.Model.StandardDomain"
+             xmlns:common="https://slb.production.engineering.common"
+             xmlns:str_properties="clr-namespace:Slb.Production.Engineering.Model.StandardDomain.Properties;assembly=Slb.Production.Engineering.Model.StandardDomain"
+             xmlns:localWellViews="clr-namespace:Slb.Production.Engineering.Views.Well">
+  <Grid IsSharedSizeScope="true">
+    <FrameworkElement.Resources>
+      <common:DataContextSpy x:Key="spy"/>
+    </FrameworkElement.Resources>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition x:Name="FirstColumn" Width="Auto"/>
+      <ColumnDefinition x:Name="SecondColumn" Width="*"/>
+    </Grid.ColumnDefinitions>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+    <StackPanel Grid.Row="0">
+      <ui:CustomExpander Header="{x:Static str_properties:CoreStrings.CalculationOptions}">
+        <StackPanel>
+          <ContentControl>
+            <ui:CollectionContentItem x:Name="combo_SurveyType" Label="{x:Static str_properties:CoreStrings.SurveyType}"
+                                      EnumType="{x:Type data:DeviationSurveyType}"
+                                      SelectedValue="{Binding SelectedSurveyType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+          </ContentControl>
+          <StackPanel Visibility="{Binding ElementName=combo_SurveyType, Path=SelectedValue, Converter={StaticResource InvEnumToVis}, ConverterParameter=VerticalDeviation}">
+            <ContentControl>
+              <ui:CollectionContentItem x:Name="combo_DependantParameter" Label="{x:Static str_properties:CoreStrings.DependantParameter}"
+                                        EnumType="{x:Type data:TrajectoryDependantParameter}"
+                                        SelectedValue="{Binding SelectedTrajectoryDependantParameter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </ContentControl>
+            <ContentControl Visibility="{Binding TrajectoryDependantParameter, Converter={StaticResource EnumToVis}, ConverterParameter=TVD}">
+              <ui:CollectionContentItem Label="{x:Static str_properties:CoreStrings.CalculationMethod}"
+                                        SelectedValue="{Binding SelectedCalculationMethod, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        Collection="{Binding CalculationMethods, Mode=OneTime}"
+                                        IsEnabled="{Binding ElementName=combo_DependantParameter, Path=SelectedValue, Converter={StaticResource EnumToBool}, ConverterParameter=TVD}"/>
+            </ContentControl>
+            <ContentControl Visibility="{Binding TrajectoryDependantParameter, Converter={StaticResource InvEnumToVis}, ConverterParameter=TVD}">
+              <ui:LabledStringContentItem Label="{x:Static str_properties:CoreStrings.CalculationMethod}" IsReadOnly="true"
+                                          Value="{Binding SelectedCalculationMethod, Mode=OneWay}"/>
+            </ContentControl>
+          </StackPanel>
+        </StackPanel>
+      </ui:CustomExpander>
+      <ui:CustomExpander Header="{x:Static str_properties:CoreStrings.ReferenceOptions}">
+        <StackPanel>
+          <ContentControl>
+            <ui:CollectionContentItem Label="{x:Static str_properties:CoreStrings.RelativeToReferenceDepth}"
+                                      EnumType="{x:Type data:ReferenceDepthOption}"
+                                      SelectedValue="{Binding DeviationRelativeDepth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+          </ContentControl>
+          <ui:LabledUnitTextControl Label="{x:Static str_properties:CoreStrings.WellheadDepth}" PropName="WellheadDepth"
+                                    UnitMeasurement="Measured_Depth"/>
+          <ui:LabledUnitTextControl Label="{x:Static str_properties:CoreStrings.BottomDepth}" PropName="BottomDepth"
+                                    UnitMeasurement="Measured_Depth" IsReadOnly="true"/>
+        </StackPanel>
+      </ui:CustomExpander>
+    </StackPanel>
+    <DockPanel x:Name="DockPanel" Grid.Row="1" Grid.Column="0" LastChildFill="true">
+      <AdornerDecorator>
+        <ui:AdornerControl IsAdorning="{Binding Initialized, Converter={StaticResource InvBool}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+          <ui:AdornerControl.AdorningContent>
+            <ui:BusyView/>
+          </ui:AdornerControl.AdorningContent>
+          <ui:CustomDataGrid Loaded="SurveyGridLoaded" LostFocus="ValidateSurveyGrid" x:Name="SurveyGrid" CanUserAddRows="true"
+                             CanUserDeleteRows="true" CanUserSortColumns="false"
+                             ItemsSource="{Binding Path=TrajectoryMeasurements}"
+                             DeleteSelectedItemsCommand="{Binding DeleteSelectedTrajectoryMeasurementsCommand}"
+                             Visibility="{Binding ElementName=combo_SurveyType, Path=SelectedValue, Converter={StaticResource InvEnumToVis}, ConverterParameter=VerticalDeviation}">
+            <ui:CustomDataGrid.Columns>
+              <ui:CustomDataGridUnitColumn Header="{x:Static str_properties:CoreStrings.MeasuredDepth_Abbreviation}"
+                                           UnitMeasurement="Measured_Depth" Binding="{Binding ViewModel.MD, UpdateSourceTrigger=LostFocus}"
+                                           IsReadOnly="{Binding Source={StaticResource spy}, Path=DataContext.TrajectoryDependantParameter, Converter={StaticResource EnumToBool}, ConverterParameter=MD}"/>
+              <ui:CustomDataGridUnitColumn Header="{x:Static str_properties:CoreStrings.TrueVerticalDepth_Abbreviation}"
+                                           UnitMeasurement="True_Vertical_Depth"
+                                           Binding="{Binding ViewModel.TVD, UpdateSourceTrigger=LostFocus}"
+                                           IsReadOnly="{Binding Source={StaticResource spy}, Path=DataContext.TrajectoryDependantParameter, Converter={StaticResource EnumToBool}, ConverterParameter=TVD}"/>
+              <ui:CustomDataGridUnitColumn Header="{x:Static str_properties:CoreStrings.HorizontalDisplacement}"
+                                           UnitMeasurement="Measured_Depth" IsReadOnly="true"
+                                           Binding="{Binding ViewModel.HD, UpdateSourceTrigger=LostFocus}"/>
+              <ui:CustomDataGridUnitColumn Header="{x:Static str_properties:CoreStrings.Angle}" UnitMeasurement="Inclination"
+                                           Binding="{Binding ViewModel.Angle, UpdateSourceTrigger=LostFocus}"
+                                           IsReadOnly="{Binding Source={StaticResource spy}, Path=DataContext.TrajectoryDependantParameter, Converter={StaticResource EnumToBool}, ConverterParameter=Angle}"/>
+              <ui:CustomDataGridUnitColumn Header="{x:Static str_properties:CoreStrings.Azimuth}" UnitMeasurement="Azimuth"
+                                           Binding="{Binding ViewModel.Azimuth, UpdateSourceTrigger=LostFocus}"
+                                           Visibility="{Binding Source={StaticResource spy}, Path=DataContext.SelectedSurveyType, Converter={StaticResource EnumToVis}, ConverterParameter=ThreeDimensional}"/>
+              <ui:CustomDataGridUnitColumn Header="{x:Static str_properties:CoreStrings.MaxDoglegSeverity}" UnitMeasurement="Dog_Leg_Severity"
+                                           Binding="{Binding ViewModel.MaxDogLegSeverity, UpdateSourceTrigger=LostFocus}"
+                                           Visibility="{Binding Source={StaticResource spy}, Path=DataContext.SelectedSurveyType, Converter={StaticResource EnumToVis}, ConverterParameter=ThreeDimensional}"/>
+            </ui:CustomDataGrid.Columns>
+          </ui:CustomDataGrid>
+        </ui:AdornerControl>
+      </AdornerDecorator>
+    </DockPanel>
+    <AdornerDecorator Grid.RowSpan="2" Grid.Column="1">
+      <ui:AdornerControl IsAdorning="{Binding Initialized, Converter={StaticResource InvBool}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+        <ui:AdornerControl.AdorningContent>
+          <ui:BusyView/>
+        </ui:AdornerControl.AdorningContent>
+        <ContentControl Grid.RowSpan="2" Grid.Column="1" Content="{Binding ChartViewModel}"
+                        Visibility="{Binding ElementName=combo_SurveyType, Path=SelectedValue, Converter={StaticResource InvEnumToVis}, ConverterParameter=VerticalDeviation}"/>
+      </ui:AdornerControl>
+    </AdornerDecorator>
+  </Grid>
+</UserControl>

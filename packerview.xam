@@ -1,0 +1,23 @@
+<UserControl x:Class="Slb.Production.Engineering.Views.Well.PackerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ui="https://slb.production.engineering.ui"
+             xmlns:local="clr-namespace:Slb.Production.Engineering.Views"
+             xmlns:common="https://slb.production.engineering.common"
+             xmlns:str_properties="clr-namespace:Slb.Production.Engineering.Model.StandardDomain.Properties;assembly=Slb.Production.Engineering.Model.StandardDomain">
+  <StackPanel Grid.IsSharedSizeScope="true">
+    <ui:CustomExpander Header="{x:Static str_properties:CoreStrings.Packer}" IsPageHeader="true">
+      <StackPanel>
+        <ContentControl>
+          <ui:LabledStringContentItem Label="{x:Static str_properties:CoreStrings.Name}" Value="{Binding Name, Mode=TwoWay}"/>
+        </ContentControl>
+        <ContentControl>
+          <ui:LabledBooleanContentItem Label="{x:Static str_properties:CoreStrings.IsActive}" IsChecked="{Binding IsActive, Mode=TwoWay}"/>
+        </ContentControl>
+        <local:DownholeEquipmentLocationView DataContext="{Binding LocationViewModel}"/>
+      </StackPanel>
+    </ui:CustomExpander>
+  </StackPanel>
+</UserControl>

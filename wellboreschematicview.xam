@@ -1,0 +1,33 @@
+<UserControl x:Class="Slb.Production.Engineering.Views.Well.WellboreSchematicView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:wb="clr-namespace:Slb.Ocean.UI.WellboreSchematic;assembly=Slb.Ocean.UI.WellboreSchematic"
+             xmlns:WellboreSchematic="clr-namespace:Slb.Production.Engineering.Views.Well.WellboreSchematic"
+             xmlns:UI="clr-namespace:Slb.Production.Engineering.UI;assembly=Slb.Production.Engineering.UI"
+             xmlns:Properties="clr-namespace:Slb.Production.Engineering.Model.StandardDomain.Properties;assembly=Slb.Production.Engineering.Model.StandardDomain"
+             MinHeight="200" MinWidth="200">
+  <DockPanel>
+    <WellboreSchematic:OptimizedWellboreSchematicCanvas x:Name="Canvas" Loaded="WellboreViewer_Loaded"
+                                                        DataContextChanged="WellboreViewer_DataContextChanged" MouseDown="Canvas_OnMouseDown"
+                                                        VerticalAlignment="Stretch" AllowDrop="true" BorderPen="{StaticResource TransparentPen}"
+                                                        Focusable="true" AllowMultiSelection="false">
+      <UIElement.InputBindings>
+        <KeyBinding Key="Delete" Command="{Binding DeleteSelectedItemCommand}"/>
+      </UIElement.InputBindings>
+      <FrameworkElement.ContextMenu>
+        <ContextMenu>
+          <MenuItem Header="{x:Static Properties:CoreStrings.DeleteSelected}"
+                    Command="{Binding DeleteSelectedItemCommand}">
+            <MenuItem.Icon>
+              <Image Source="{Binding Source={x:Static UI:ImageKey.Delete}, Converter={StaticResource ImageKeyToSource16}}"/>
+            </MenuItem.Icon>
+          </MenuItem>
+          <MenuItem Header="{x:Static Properties:CoreStrings.ToggleLabel}"
+                    Command="{Binding ToggleSelectedItemLabelVisibilityCommand}"/>
+        </ContextMenu>
+      </FrameworkElement.ContextMenu>
+    </WellboreSchematic:OptimizedWellboreSchematicCanvas>
+  </DockPanel>
+</UserControl>

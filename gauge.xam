@@ -1,0 +1,47 @@
+<UserControl x:Class="Slb.Production.Engineering.Views.Well.Gauge"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <DockPanel>
+    <Canvas x:Name="Layer_1" DockPanel.Dock="Left" Width="20" Height="20" VerticalAlignment="Center">
+      <Ellipse x:Name="Ellipse" Width="20" Height="20" Stretch="Fill" StrokeThickness="0.3" StrokeLineJoin="Round"
+               Stroke="#FF000000">
+        <Shape.Fill>
+          <RadialGradientBrush RadiusX="0.5" RadiusY="0.5" Center="0.5,0.5" GradientOrigin="0.5,0.5">
+            <GradientBrush.GradientStops>
+              <GradientStop Color="#FFF4F6F8" Offset="0.8"/>
+              <GradientStop Color="#FF7F8081" Offset="0.9"/>
+              <GradientStop Color="#FF0A0B0B" Offset="1"/>
+            </GradientBrush.GradientStops>
+          </RadialGradientBrush>
+        </Shape.Fill>
+      </Ellipse>
+      <Path x:Name="Path" Width="16" Height="16" Canvas.Left="2" Canvas.Top="2" Stretch="Fill"
+            StrokeThickness="0.3" StrokeLineJoin="Round" Stroke="#FF000000"
+            Data="F1 M 7.11688,3.22425 C 10.9921,1.49891 15.5322,3.2417 17.2575,7.11688 18.9829,10.9921 17.2401,15.5322 13.3649,17.2575 9.48971,18.9829 4.94959,17.2401 3.22425,13.3649 1.49891,9.48971 3.2417,4.94959 7.11688,3.22425 Z">
+        <Shape.Fill>
+          <LinearGradientBrush StartPoint="0.7,1" EndPoint="0.3,0">
+            <GradientBrush.GradientStops>
+              <GradientStop Color="#FF4A8FD3" Offset="0"/>
+              <GradientStop Color="#FFE0EEF6" Offset="1"/>
+            </GradientBrush.GradientStops>
+          </LinearGradientBrush>
+        </Shape.Fill>
+      </Path>
+      <Path x:Name="Path_0" Width="7.61173" Height="5.50324" Canvas.Left="9.26756" Canvas.Top="8.54749"
+            Stretch="Fill" Fill="#FF000000" Data="F1 M 9.26756,11.8733 L 16.8793,14.0507 11.1877,8.54749 "/>
+      <Ellipse x:Name="Ellipse_1" Width="5" Height="5" Canvas.Left="7.5" Canvas.Top="7.5" Stretch="Fill">
+        <Shape.Fill>
+          <RadialGradientBrush RadiusX="0.5625" RadiusY="0.5625" Center="0.5,0.5" GradientOrigin="0.5,0.5">
+            <GradientBrush.GradientStops>
+              <GradientStop Color="#FFF4F6F8" Offset="0"/>
+              <GradientStop Color="#FF7F8081" Offset="0.3"/>
+              <GradientStop Color="#FF0A0B0B" Offset="1"/>
+            </GradientBrush.GradientStops>
+          </RadialGradientBrush>
+        </Shape.Fill>
+      </Ellipse>
+    </Canvas>
+    <TextBlock x:Name="GaugeName" VerticalAlignment="Center" Text="Test" MaxWidth="80"
+               TextWrapping="WrapWithOverflow" Width="Auto"/>
+  </DockPanel>
+</UserControl>

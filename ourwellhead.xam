@@ -1,0 +1,101 @@
+<UserControl x:Class="Slb.Production.Engineering.Views.Well.OurWellhead"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Height="500" Width="500">
+  <FrameworkElement.Resources>
+    <GeometryGroup x:Key="wellheadGeo" FillRule="Nonzero">
+      <PathGeometry Figures="M 0,15 L 30,15 L 30,12.5 L 0,12.5 Z" FillRule="Nonzero"/>
+      <PathGeometry Figures="M 5,12.5 L 25,12.5 L 25,10 L 5,10 Z" FillRule="Nonzero"/>
+      <PathGeometry Figures="M 11.2,10.0 L 18.8,10.0 L 18.8,0 L 11.2,0 Z" FillRule="Nonzero"/>
+    </GeometryGroup>
+    <GeometryGroup x:Key="wellheadOutletGeo" FillRule="Nonzero">
+      <PathGeometry Figures="M 18.8,5.25 L 23.0,5.25 C 22.5,5.75 23.5,6.25 23.0,6.5 L 18.8,6.5 Z" FillRule="Nonzero"/>
+    </GeometryGroup>
+    <GeometryGroup x:Key="branchLineGeo" FillRule="Nonzero">
+      <PathGeometry Figures="M 28.0,5.25 L 24.0,5.25 C 23.5,5.75 24.5,6.25 24.0,6.5 L 28.0,6.5 Z" FillRule="Nonzero"/>
+    </GeometryGroup>
+    <LinearGradientBrush x:Key="wellheadBrush" StartPoint="0,1" EndPoint="1,1">
+      <GradientStop Offset="0" Color="Black"/>
+      <GradientStop Offset="0.35" Color="Gray"/>
+      <GradientStop Offset="0.5" Color="White"/>
+      <GradientStop Offset="0.65" Color="Gray"/>
+      <GradientStop Offset="1" Color="Black"/>
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="wellpipeBrush" StartPoint="1,0" EndPoint="1,1">
+      <GradientStop Offset="0" Color="Black"/>
+      <GradientStop Offset="0.1" Color="Black"/>
+      <GradientStop Offset="0.5" Color="White"/>
+      <GradientStop Offset="0.9" Color="Black"/>
+      <GradientStop Offset="1" Color="Black"/>
+    </LinearGradientBrush>
+    <Pen x:Key="wellheadBorder" Brush="Black" Thickness="0.3"/>
+    <Pen x:Key="gaugePen" Brush="Black" Thickness="0.1"/>
+    <DrawingGroup x:Key="grpWellHead">
+      <GeometryDrawing Brush="Black">
+        <GeometryDrawing.Geometry>
+          <PathGeometry Figures="M 12.2,8.1 L 9.0,8.1 L 9.0,9.25 L 8.4,9.25 L 8.4,6.25 L 9.0,6.25 L 9.0, 7.4 L 11.2, 7.4 Z"
+                        FillRule="Nonzero"/>
+        </GeometryDrawing.Geometry>
+      </GeometryDrawing>
+      <GeometryDrawing Brush="{StaticResource wellpipeBrush}" Pen="{StaticResource wellheadBorder}">
+        <GeometryDrawing.Geometry>
+          <PathGeometry Figures="M 18.8,5.25 L 23.0,5.25 C 22.5,5.75 23.5,6.25 23.0,6.5 L 18.8,6.5 Z" FillRule="Nonzero"/>
+        </GeometryDrawing.Geometry>
+      </GeometryDrawing>
+      <GeometryDrawing Brush="{StaticResource wellheadBrush}" Pen="{StaticResource wellheadBorder}">
+        <GeometryDrawing.Geometry>
+          <PathGeometry Figures="M 0,15 L 30,15 L 30,12.5 L 0,12.5 Z" FillRule="Nonzero"/>
+        </GeometryDrawing.Geometry>
+      </GeometryDrawing>
+      <GeometryDrawing Brush="{StaticResource wellheadBrush}" Pen="{StaticResource wellheadBorder}">
+        <GeometryDrawing.Geometry>
+          <PathGeometry Figures="M 5,12.5 L 25,12.5 L 25,10 L 5,10 Z" FillRule="Nonzero"/>
+        </GeometryDrawing.Geometry>
+      </GeometryDrawing>
+      <GeometryDrawing Brush="{StaticResource wellheadBrush}" Pen="{StaticResource wellheadBorder}">
+        <GeometryDrawing.Geometry>
+          <PathGeometry Figures="M 11.2,10.0 L 18.8,10.0 L 18.8,0 L 11.2,0 Z" FillRule="Nonzero"/>
+        </GeometryDrawing.Geometry>
+      </GeometryDrawing>
+      <GeometryDrawing Brush="Black">
+        <GeometryDrawing.Geometry>
+          <EllipseGeometry Center="15,2.8" RadiusX="2" RadiusY="2"/>
+        </GeometryDrawing.Geometry>
+      </GeometryDrawing>
+      <GeometryDrawing>
+        <GeometryDrawing.Brush>
+          <RadialGradientBrush Center="0.5, 0.5" RadiusX="0.5" RadiusY="0.5">
+            <GradientBrush.GradientStops>
+              <GradientStop Color="#FF4A8FD3" Offset="1"/>
+              <GradientStop Color="#FFE0EEF6" Offset="0"/>
+            </GradientBrush.GradientStops>
+          </RadialGradientBrush>
+        </GeometryDrawing.Brush>
+        <GeometryDrawing.Geometry>
+          <EllipseGeometry Center="15,2.8" RadiusX="1.6" RadiusY="1.6"/>
+        </GeometryDrawing.Geometry>
+      </GeometryDrawing>
+      <GeometryDrawing Pen="{StaticResource gaugePen}" Brush="Blue">
+        <GeometryDrawing.Geometry>
+          <PathGeometry Figures="M 14.8,2.8L 15,1.6L 15.2,2.8">
+            <Geometry.Transform>
+              <RotateTransform Angle="37" CenterX="15" CenterY="2.8"/>
+            </Geometry.Transform>
+          </PathGeometry>
+        </GeometryDrawing.Geometry>
+      </GeometryDrawing>
+      <GeometryDrawing>
+        <GeometryDrawing.Geometry>
+          <EllipseGeometry Center="15, 2.8" RadiusX="0.3" RadiusY="0.3"/>
+        </GeometryDrawing.Geometry>
+        <GeometryDrawing.Brush>
+          <RadialGradientBrush Center="0.5, 0.5">
+            <GradientStop Color="#FFF4F6F8" Offset="0"/>
+            <GradientStop Color="#FF7F8081" Offset="0.3"/>
+            <GradientStop Color="#FF0A0B0B" Offset="1"/>
+          </RadialGradientBrush>
+        </GeometryDrawing.Brush>
+      </GeometryDrawing>
+    </DrawingGroup>
+  </FrameworkElement.Resources>
+</UserControl>

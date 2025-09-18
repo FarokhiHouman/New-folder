@@ -1,0 +1,32 @@
+<UserControl x:Class="Slb.Production.Engineering.Views.Well.TubingCasingCatalogSelectorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:grid="clr-namespace:Slb.Production.Engineering.UI.Grid;assembly=Slb.Production.Engineering.UI"
+             xmlns:Units="clr-namespace:Slb.Production.Engineering.Model.StandardDomain.Units;assembly=Slb.Production.Engineering.Model.StandardDomain"
+             xmlns:Properties="clr-namespace:Slb.Production.Engineering.Model.StandardDomain.Properties;assembly=Slb.Production.Engineering.Model.StandardDomain">
+  <grid:CustomDataGrid IsReadOnly="true" ShowFilterRow="true" SelectionMode="Single" SelectionUnit="FullRow"
+                       AutomationProperties.AutomationId="TubingCasingSelectorGrid" ItemsSource="{Binding Tubings}"
+                       SelectedItem="{Binding SelectedTubing}" DoubleClickCommand="{Binding ApplySelectionCommand}">
+    <grid:CustomDataGrid.Columns>
+      <grid:CustomDataGridTextColumn Header="{x:Static Properties:CoreStrings.Catalog}" IsReadOnly="true" Binding="{Binding Catalog}"/>
+      <grid:CustomDataGridUnitColumn Header="{x:Static Properties:CoreStrings.OutsideDiameter_SN}"
+                                     UnitMeasurement="{x:Static Units:Measurements.InsideDiameter}" IsReadOnly="true"
+                                     Binding="{Binding OutsideDiameter}"/>
+      <grid:CustomDataGridUnitColumn Header="{x:Static Properties:CoreStrings.InsideDiameter_SN}"
+                                     UnitMeasurement="{x:Static Units:Measurements.OutsideDiameter}" IsReadOnly="true"
+                                     Binding="{Binding InsideDiameter}"/>
+      <grid:CustomDataGridUnitColumn Header="{x:Static Properties:CoreStrings.Thickness}"
+                                     UnitMeasurement="{x:Static Units:Measurements.InsideDiameter}" IsReadOnly="true"
+                                     Binding="{Binding WallThickness}"/>
+      <grid:CustomDataGridUnitColumn Header="{x:Static Properties:CoreStrings.Weight}"
+                                     UnitMeasurement="{x:Static Units:Measurements.MassPerLength}" IsReadOnly="true"
+                                     Binding="{Binding Weight}"/>
+      <grid:CustomDataGridUnitColumn Header="{x:Static Properties:CoreStrings.Roughness}"
+                                     UnitMeasurement="{x:Static Units:Measurements.InsideDiameter}" IsReadOnly="true"
+                                     Binding="{Binding Roughness}"/>
+      <grid:CustomDataGridTextColumn Header="{x:Static Properties:CoreStrings.Grade}" IsReadOnly="true" Binding="{Binding Grade}"/>
+    </grid:CustomDataGrid.Columns>
+  </grid:CustomDataGrid>
+</UserControl>

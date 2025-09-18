@@ -1,0 +1,275 @@
+<UserControl x:Class="Slb.Production.Engineering.Views.Well.FluidLinkView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:common="https://slb.production.engineering.common"
+             xmlns:local="clr-namespace:Slb.Production.Engineering.Views.Well"
+             xmlns:fluid="clr-namespace:Slb.Production.Engineering.Views.Fluid"
+             xmlns:data="clr-namespace:Slb.Production.Engineering.Model.StandardDomain;assembly=Slb.Production.Engineering.Model.StandardDomain"
+             xmlns:ui="https://slb.production.engineering.ui"
+             xmlns:Units="clr-namespace:Slb.Production.Engineering.Model.StandardDomain.Units;assembly=Slb.Production.Engineering.Model.StandardDomain"
+             xmlns:str_properties="clr-namespace:Slb.Production.Engineering.Model.StandardDomain.Properties;assembly=Slb.Production.Engineering.Model.StandardDomain">
+  <ui:CustomTabControl x:Name="tabs" SelectedIndex="{Binding SelectedIndex}"
+                       ui:TabControlBehavior.ActiveTabHeader="{Binding ActiveTabHeader, Mode=TwoWay}">
+    <FrameworkElement.Resources>
+      <ResourceDictionary>
+        <ResourceDictionary.MergedDictionaries>
+          <ResourceDictionary Source="IPRModelViewModelDataTemplates.xaml"/>
+          <ResourceDictionary Source="SkinViewModelDataTemplates.xaml"/>
+        </ResourceDictionary.MergedDictionaries>
+      </ResourceDictionary>
+    </FrameworkElement.Resources>
+    <TabItem IsVisibleChanged="Tab_IsVisibleChanged" Header="{x:Static str_properties:CoreStrings.Reservoir}">
+      <AdornerDecorator>
+        <ui:AdornerControl IsAdorning="{Binding EngineIsCalculating, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+          <ui:AdornerControl.AdorningContent>
+            <ui:BusyView/>
+          </ui:AdornerControl.AdorningContent>
+          <Grid IsSharedSizeScope="true">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto"/>
+              <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Column="0">
+              <ui:CustomExpander Grid.IsSharedSizeScope="true">
+                <DockPanel>
+                  <StackPanel DockPanel.Dock="Top">
+                    <ui:LabledUnitTextControl Label="{x:Static str_properties:CoreStrings.ReservoirPressureStatic}" PropName="Pressure"
+                                              IsReadOnly="{Binding Path=AssociatedZone, Converter={StaticResource InvNullToBool}}"/>
+                    <ui:LabledUnitTextControl Label="{x:Static str_properties:CoreStrings.ReservoirTemperature}" PropName="Temperature"
+                                              IsReadOnly="{Binding Path=AssociatedZone, Converter={StaticResource InvNullToBool}}"/>
+                    <StackPanel DataContext="{Binding IPRModelViewModel}">
+                      <ContentControl Visibility="{Binding HasIPRCalculationBasis, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVis}}">
+                        <ui:CollectionContentItem Label="{x:Static str_properties:CoreStrings.IPRCalculationBasis}"
+                                                  EnumType="{x:Type local:IPRCalculationBasis}"
+                                                  SelectedValue="{Binding IPRCalculationBasis, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                  IsReadOnly="{Binding IsConditionalIPRCalculationBasis, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InvBool}}"/>
+                      </ContentControl>
+                      <ContentControl Content="{Binding}"/>
+                    </StackPanel>
+                  </StackPanel>
+                  <DockPanel Visibility="{Binding IPRModelViewModel.CanUseTestDataForIPRCalulation, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVis}}">
+                    <ContentControl DockPanel.Dock="Top">
+                      <ui:LabledBooleanContentItem Label="{x:Static str_properties:CoreStrings.UseTestDataForIPR}"
+                                                   IsChecked="{Binding UseTestData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    </ContentControl>
+                    <DockPanel Visibility="{Binding UseTestData, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVis}}">
+                      <ContentControl DockPanel.Dock="Top"
+                                      Visibility="{Binding IPRModelViewModel.IsConditionalTestType, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVis}}">
+                        <ui:CollectionContentItem Label="{x:Static str_properties:CoreStrings.IPRModelTestType}"
+                                                  EnumType="{x:Type data:CompletionTestType}"
+                                                  SelectedValue="{Binding CompletionTestType, Mode=TwoWay}"/>
+                      </ContentControl>
+                      <ui:CustomDataGrid Loaded="TestDataGridLoaded" LostFocus="ValidateTestData" x:Name="TestDataGrid"
+                                         CanUserDeleteRows="true" VerticalScrollBarVisibility="Visible" FixTextBoxValidationBehavior="true"
+                                         CanUserAddRows="{Binding IPRModelViewModel.CanAddTestPoints}" ItemsSource="{Binding TestPoints}"
+                                         Visibility="{Binding Path=CompletionTestType, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToVis}, ConverterParameter=Multipoint}"
+                                         ui:RefreshGridValidationBehavior.RefreshValidation="{Binding RefreshTestPointsValidation, Mode=TwoWay}"
+                                         DeleteSelectedItemsCommand="{Binding DeleteSelectedItemsCommand}">
+                        <ui:CustomDataGrid.Columns>
+                          <ui:CustomDataGridUnitColumn Header="{x:Static str_properties:CoreStrings.Flowrate_Abbreviation}"
+                                                       UnitMeasurement="Liquid_Flowrate"
+                                                       Binding="{Binding ViewModel.LiquidFlowRate, UpdateSourceTrigger=LostFocus}"
+                                                       Visibility="{Binding Path=(FrameworkElement.DataContext).IPRModelViewModel.IsGasCompletion, RelativeSource={x:Static RelativeSource.Self}, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InvBoolToVis}}"/>
+                          <ui:CustomDataGridUnitColumn Header="{x:Static str_properties:CoreStrings.Flowrate_Abbreviation}" UnitMeasurement="Gas_Flowrate"
+                                                       Binding="{Binding ViewModel.GasFlowRate, UpdateSourceTrigger=LostFocus}"
+                                                       Visibility="{Binding Path=(FrameworkElement.DataContext).IPRModelViewModel.IsGasCompletion, RelativeSource={x:Static RelativeSource.Self}, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVis}}"/>
+                          <ui:CustomDataGridUnitColumn Header="{x:Static str_properties:CoreStrings.WellBottomHolePressureFlowing_Abbreviation}"
+                                                       UnitMeasurement="Pressure"
+                                                       Binding="{Binding ViewModel.BottomHoleFlowingPressure, UpdateSourceTrigger=LostFocus}"/>
+                        </ui:CustomDataGrid.Columns>
+                      </ui:CustomDataGrid>
+                      <ui:CustomDataGrid Loaded="TestDataGridLoaded" LostFocus="ValidateTestData" x:Name="TestDataGrid3"
+                                         CanUserDeleteRows="true" VerticalScrollBarVisibility="Visible" FixTextBoxValidationBehavior="true"
+                                         CanUserAddRows="{Binding IPRModelViewModel.CanAddTestPoints}" ItemsSource="{Binding TestPoints}"
+                                         Visibility="{Binding Path=CompletionTestType, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToVis}, ConverterParameter=Isochronal}"
+                                         ui:RefreshGridValidationBehavior.RefreshValidation="{Binding RefreshTestPointsValidation, Mode=TwoWay}"
+                                         DeleteSelectedItemsCommand="{Binding DeleteSelectedItemsCommand}">
+                        <ui:CustomDataGrid.Columns>
+                          <ui:CustomDataGridUnitColumn Header="{x:Static str_properties:CoreStrings.Flowrate_Abbreviation}"
+                                                       UnitMeasurement="Liquid_Flowrate"
+                                                       Binding="{Binding ViewModel.LiquidFlowRate, UpdateSourceTrigger=LostFocus}"
+                                                       Visibility="{Binding Path=(FrameworkElement.DataContext).IPRModelViewModel.IsGasCompletion, RelativeSource={x:Static RelativeSource.Self}, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InvBoolToVis}}"/>
+                          <ui:CustomDataGridUnitColumn Header="{x:Static str_properties:CoreStrings.Flowrate_Abbreviation}" UnitMeasurement="Gas_Flowrate"
+                                                       Binding="{Binding ViewModel.GasFlowRate, UpdateSourceTrigger=LostFocus}"
+                                                       Visibility="{Binding Path=(FrameworkElement.DataContext).IPRModelViewModel.IsGasCompletion, RelativeSource={x:Static RelativeSource.Self}, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVis}}"/>
+                          <ui:CustomDataGridUnitColumn Header="{x:Static str_properties:CoreStrings.WellBottomHolePressureFlowing_Abbreviation}"
+                                                       UnitMeasurement="Pressure"
+                                                       Binding="{Binding ViewModel.BottomHoleFlowingPressure, UpdateSourceTrigger=LostFocus}"/>
+                          <ui:CustomDataGridUnitColumn Header="{x:Static str_properties:CoreStrings.ReservoirPressureStatic_Abbreviation}"
+                                                       UnitMeasurement="Pressure"
+                                                       Binding="{Binding ViewModel.StaticReservoirPressure, UpdateSourceTrigger=LostFocus}"/>
+                        </ui:CustomDataGrid.Columns>
+                      </ui:CustomDataGrid>
+                    </DockPanel>
+                  </DockPanel>
+                </DockPanel>
+              </ui:CustomExpander>
+            </ScrollViewer>
+            <DockPanel Grid.Column="1" LastChildFill="true">
+              <ContentControl HorizontalAlignment="Center" DockPanel.Dock="Bottom" HorizontalContentAlignment="Stretch"
+                              Visibility="{Binding IPRModelViewModel.IPRCurveInfoVisible, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVis}}">
+                <ui:QuickTipContentItem DocumentAutomationId="CompletionResult_IPR_Tooltip"
+                                        Tip="{x:Static str_properties:CoreStrings.CompletionResult_IPR_Tooltip}" Width="880"/>
+              </ContentControl>
+              <ContentControl DockPanel.Dock="Top">
+                <FrameworkElement.Style>
+                  <Style TargetType="{x:Type ContentControl}">
+                    <Style.Setters>
+                      <Setter Property="UIElement.Visibility" Value="Collapsed"/>
+                      <Setter Property="Control.HorizontalContentAlignment" Value="Stretch"/>
+                      <Setter Property="Control.VerticalContentAlignment" Value="Stretch"/>
+                    </Style.Setters>
+                    <Style.Triggers>
+                      <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                          <Condition Binding="{Binding IPRModelViewModel.IsCurveSupported, UpdateSourceTrigger=PropertyChanged}"
+                                     Value="True"/>
+                          <Condition Binding="{Binding IsInTemplateWell, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:FluidLinkView}}, Converter={StaticResource InvBool}}"
+                                     Value="True"/>
+                        </MultiDataTrigger.Conditions>
+                        <Setter Property="UIElement.Visibility" Value="Visible"/>
+                      </MultiDataTrigger>
+                      <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                          <Condition Binding="{Binding IPRModelViewModel.IsCurveSupported, UpdateSourceTrigger=PropertyChanged}"
+                                     Value="True"/>
+                          <Condition Binding="{Binding IPRModelViewModel.IsSupportedByOS, UpdateSourceTrigger=PropertyChanged}"
+                                     Value="False"/>
+                        </MultiDataTrigger.Conditions>
+                        <Setter Property="ContentControl.Content">
+                          <Setter.Value>
+                            <ui:QuickTipContentItem Tip="{x:Static str_properties:CoreStrings.CompletionIPRCurveOSNotSupported}"/>
+                          </Setter.Value>
+                        </Setter>
+                      </MultiDataTrigger>
+                      <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                          <Condition Binding="{Binding IPRModelViewModel.IsCurveSupported, UpdateSourceTrigger=PropertyChanged}"
+                                     Value="True"/>
+                          <Condition Binding="{Binding IPRModelViewModel.IsSupportedByOS, UpdateSourceTrigger=PropertyChanged}"
+                                     Value="True"/>
+                          <Condition Binding="{Binding IsActive, UpdateSourceTrigger=PropertyChanged}" Value="True"/>
+                        </MultiDataTrigger.Conditions>
+                        <Setter Property="ContentControl.Content"
+                                Value="{Binding IPRModelViewModel.ChartAreaViewModel, UpdateSourceTrigger=PropertyChanged}"/>
+                      </MultiDataTrigger>
+                      <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                          <Condition Binding="{Binding IPRModelViewModel.IsCurveSupported, UpdateSourceTrigger=PropertyChanged}"
+                                     Value="True"/>
+                          <Condition Binding="{Binding IPRModelViewModel.IsSupportedByOS, UpdateSourceTrigger=PropertyChanged}"
+                                     Value="True"/>
+                          <Condition Binding="{Binding IsActive, UpdateSourceTrigger=PropertyChanged}" Value="False"/>
+                        </MultiDataTrigger.Conditions>
+                        <Setter Property="ContentControl.Content">
+                          <Setter.Value>
+                            <ui:QuickTipContentItem Tip="{x:Static str_properties:CoreStrings.CompletionInactiveNoIPRCurve}"/>
+                          </Setter.Value>
+                        </Setter>
+                      </MultiDataTrigger>
+                    </Style.Triggers>
+                  </Style>
+                </FrameworkElement.Style>
+              </ContentControl>
+            </DockPanel>
+          </Grid>
+        </ui:AdornerControl>
+      </AdornerDecorator>
+    </TabItem>
+    <TabItem IsVisibleChanged="Tab_IsVisibleChanged" x:Name="fracturetab"
+             Header="{x:Static str_properties:CoreStrings.FractureTabLabel}"
+             Visibility="{Binding HasFractureConfiguration, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVis}}">
+      <StackPanel Grid.IsSharedSizeScope="true" DataContext="{Binding IPRModelViewModel}">
+        <ContentControl>
+          <ui:LabledUnitTextControl Label="{x:Static str_properties:CoreStrings.NumberOfHydraulicFracturesLabel}"
+                                    PropName="NumHydraulicFrac" UnitMeasurement=""/>
+        </ContentControl>
+        <ContentControl>
+          <ui:LabledUnitTextControl Label="{x:Static str_properties:CoreStrings.HydraulicFractureHalfLengthLabel}"
+                                    PropName="HydraulicFracHalf"/>
+        </ContentControl>
+        <ContentControl>
+          <ui:LabledUnitTextControl Label="{x:Static str_properties:CoreStrings.HydraulicFractureWidth}" PropName="HydraulicFracWidth"/>
+        </ContentControl>
+        <ContentControl>
+          <ui:LabledUnitTextControl Label="{x:Static str_properties:CoreStrings.HydraulicFracturePermeability}"
+                                    PropName="HydraulicFracPerm"/>
+        </ContentControl>
+        <ContentControl>
+          <ui:LabledUnitTextControl Label="{x:Static str_properties:CoreStrings.HydraulicFracturePorosity}"
+                                    PropName="HydraulicFracPorosity"/>
+        </ContentControl>
+        <ContentControl>
+          <ui:LabledUnitTextControl Label="{x:Static str_properties:CoreStrings.HydraulicFractureCompressibility}"
+                                    PropName="HydraulicFracCompressibility"/>
+        </ContentControl>
+        <ContentControl>
+          <ui:LabledBooleanContentItem Label="{x:Static str_properties:CoreStrings.Skin}"
+                                       IsChecked="{Binding CalcSkin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        </ContentControl>
+      </StackPanel>
+    </TabItem>
+    <TabItem x:Name="sandtab" Header="{x:Static str_properties:CoreStrings.SandTabLabel}">
+      <StackPanel Grid.IsSharedSizeScope="true"
+                  IsEnabled="{Binding HasSandConfiguration, UpdateSourceTrigger=PropertyChanged}">
+        <ContentControl>
+          <ui:LabledUnitTextControl Label="{x:Static str_properties:CoreStrings.SandProductionRatioLabel}"
+                                    PropName="SandProductionRatio" UnitMeasurement="{x:Static Units:Measurements.Salinity}"/>
+        </ContentControl>
+        <ContentControl>
+          <ui:LabledUnitTextControl Label="{x:Static str_properties:CoreStrings.SandGrainSizeLabel}" PropName="SandGrainSize"
+                                    UnitMeasurement="{x:Static Units:Measurements.InsideDiameter}"/>
+        </ContentControl>
+      </StackPanel>
+    </TabItem>
+    <TabItem IsVisibleChanged="Tab_IsVisibleChanged" x:Name="skintab"
+             Header="{x:Static str_properties:CoreStrings.Skin}"
+             Visibility="{Binding HasSkinConfiguration, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVis}}">
+      <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.IsSharedSizeScope="true" Grid.Column="0"
+                    Visibility="{Binding Visibility, ElementName=skintab, UpdateSourceTrigger=PropertyChanged}">
+        <ContentControl Content="{Binding IPRModelViewModel.SkinViewModel}"/>
+      </ScrollViewer>
+    </TabItem>
+    <TabItem IsVisibleChanged="Tab_IsVisibleChanged" Header="{x:Static str_properties:CoreStrings.FluidModel}"
+             Visibility="{Binding IsInTemplateWell, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:FluidLinkView}}, Converter={StaticResource InvBoolToVis}}">
+      <AdornerDecorator>
+        <fluid:FluidSourceView DataContext="{Binding FluidSourceViewModel}"
+                               IsFluidReadOnly="{Binding UseZoneFluid, UpdateSourceTrigger=PropertyChanged}">
+          <fluid:FluidSourceView.CustomOverrideContent>
+            <StackPanel Visibility="{Binding Path=GeometryProfileType, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToVis}, ConverterParameter=Vertical}">
+              <ContentControl Visibility="{Binding Path=GlobalFluid, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InvNullToVis}}">
+                <ui:CollectionContentItem Label="{x:Static str_properties:CoreStrings.FluidOverrideMethod}"
+                                          SelectedValue="{Binding FluidOverrideMethod, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          Collection="{Binding DisplayedFluidOverrideMethod, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+              </ContentControl>
+              <StackPanel Visibility="{Binding FluidOverrideMethod, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToVis}, ConverterParameter=ConingData}">
+                <ui:LabledUnitTextControl Label="{x:Static str_properties:CoreStrings.GasSpecificGravityConed}" PropName="ConedGasSG"/>
+                <ui:CustomDataGrid CanUserAddRows="true" CanUserDeleteRows="true" LimitVisibleRows="true"
+                                   DeleteSelectedItemsCommand="{Binding Path=DeleteSelectedItemsCommand}"
+                                   ItemsSource="{Binding ConingPoints}">
+                  <FrameworkElement.BindingGroup>
+                    <BindingGroup>
+                      <BindingGroup.ValidationRules>
+                        <local:FluidConingDataValidation/>
+                      </BindingGroup.ValidationRules>
+                    </BindingGroup>
+                  </FrameworkElement.BindingGroup>
+                  <ui:CustomDataGrid.Columns>
+                    <ui:CustomDataGridUnitColumn Header="{x:Static str_properties:CoreStrings.Flowrate_Abbreviation}"
+                                                 UnitMeasurement="Liquid_Flowrate" Binding="{Binding ViewModel.LiquidFlowRate}"/>
+                    <ui:CustomDataGridUnitColumn Header="{x:Static str_properties:CoreStrings.GasOilRatio_Abbreviation}"
+                                                 UnitMeasurement="Gas_To_Liquid_Ratio" Binding="{Binding ViewModel.GOR}"/>
+                    <ui:CustomDataGridUnitColumn Header="{x:Static str_properties:CoreStrings.WaterCut}" UnitMeasurement="Water_Cut"
+                                                 Binding="{Binding ViewModel.WaterCut}"/>
+                  </ui:CustomDataGrid.Columns>
+                </ui:CustomDataGrid>
+              </StackPanel>
+            </StackPanel>
+          </fluid:FluidSourceView.CustomOverrideContent>
+        </fluid:FluidSourceView>
+      </AdornerDecorator>
+    </TabItem>
+  </ui:CustomTabControl>
+</UserControl>

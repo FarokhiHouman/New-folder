@@ -1,0 +1,25 @@
+﻿ooltip);
+    checkboxDefinition1.KeyTipAccessText = "F";
+    CheckboxDefinition checkboxDefinition2 = checkboxDefinition1;
+    checkboxDefinition2.IsChecked = this.GetDisplaySettings("FlowLineVisible");
+    tabGroupDefinition2.Elements.Add((object) checkboxDefinition2);
+    CheckboxDefinition checkboxDefinition3 = new CheckboxDefinition(CoreStrings.Labels, command, (object) "LabelVisible", CoreStrings.Labels_Tooltip);
+    checkboxDefinition3.KeyTipAccessText = "L";
+    CheckboxDefinition checkboxDefinition4 = checkboxDefinition3;
+    checkboxDefinition4.IsChecked = this.GetDisplaySettings("LabelVisible");
+    tabGroupDefinition2.Elements.Add((object) checkboxDefinition4);
+    CheckboxDefinition checkboxDefinition5 = new CheckboxDefinition(CoreStrings.DepthReference, command, (object) "DepthVisible", CoreStrings.DepthReference_Tooltip);
+    checkboxDefinition5.KeyTipAccessText = "D";
+    CheckboxDefinition checkboxDefinition6 = checkboxDefinition5;
+    checkboxDefinition6.IsChecked = this.GetDisplaySettings("DepthVisible");
+    tabGroupDefinition2.Elements.Add((object) checkboxDefinition6);
+    TabGroupDefinition tabGroupDefinition3 = new TabGroupDefinition(CoreStrings.RibbonTabGroup_Others, ImageKey.Others);
+    tabDefinition2.Groups.Add(tabGroupDefinition3);
+    ObservableCollection<object> elements1 = tabGroupDefinition3.Elements;
+    ButtonDefinition buttonDefinition9 = new ButtonDefinition(CoreStrings.Print, command, (object) "Slb.Production.Engineering.WellboreViewer.PrintWellbore", ImageKey.Print, CoreStrings.Print_Tooltip);
+    buttonDefinition9.KeyTipAccessText = "P";
+    elements1.Add((object) buttonDefinition9);
+    ObservableCollection<object> elements2 = tabGroupDefinition3.Elements;
+    ButtonDefinition buttonDefinition10 = new ButtonDefinition(CoreStrings.SaveAsTemplate, WellCommands.SaveAsTemplate, (object) null, ImageKey.SaveAsTemplateWell, CoreStrings.SaveAsTemplate_Tooltip);
+    buttonDefinition10.KeyTipAccessText = "S";
+   

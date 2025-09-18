@@ -1,0 +1,24 @@
+﻿.SectionalViewStyle_Tooltip, true, "Label", ButtonSize.Medium);
+    galleryDefinition1.KeyTipAccessText = "C";
+    GalleryDefinition galleryDefinition2 = galleryDefinition1;
+    GalleryDefinition galleryDefinition3 = galleryDefinition2;
+    ButtonDefinition buttonDefinition5 = new ButtonDefinition(CoreStrings.SectionalViewStyle_Half, command, (object) "HalfMode", ImageKey.Empty, (string) null);
+    buttonDefinition5.KeyTipAccessText = "H";
+    galleryDefinition3.AddItem((object) buttonDefinition5);
+    GalleryDefinition galleryDefinition4 = galleryDefinition2;
+    ButtonDefinition buttonDefinition6 = new ButtonDefinition(CoreStrings.SectionalViewStyle_Full, command, (object) "FullMode", ImageKey.Empty, (string) null);
+    buttonDefinition6.KeyTipAccessText = "F";
+    galleryDefinition4.AddItem((object) buttonDefinition6);
+    GalleryDefinition galleryDefinition5 = galleryDefinition2;
+    ButtonDefinition buttonDefinition7 = new ButtonDefinition(CoreStrings.SectionalViewStyle_Quarter, command, (object) "QuarterMode", ImageKey.Empty, (string) null);
+    buttonDefinition7.KeyTipAccessText = "Q";
+    galleryDefinition5.AddItem((object) buttonDefinition7);
+    GalleryDefinition galleryDefinition6 = galleryDefinition2;
+    ButtonDefinition buttonDefinition8 = new ButtonDefinition(CoreStrings.SectionalViewStyle_SimplifiedHalf, command, (object) "SimplifiedFHalf", ImageKey.Empty, (string) null);
+    buttonDefinition8.KeyTipAccessText = "S";
+    galleryDefinition6.AddItem((object) buttonDefinition8);
+    galleryDefinition2.SelectedItem = galleryDefinition2.Items[3];
+    tabGroupDefinition1.Elements.Add((object) galleryDefinition2);
+    TabGroupDefinition tabGroupDefinition2 = new TabGroupDefinition(CoreStrings.RibbonTabGroup_ShowHide, ImageKey.ShowHide);
+    tabDefinition2.Groups.Add(tabGroupDefinition2);
+    CheckboxDefinition checkboxDefinition1 = new CheckboxDefinition(CoreStrings.Flowpath, command, (object) "FlowLineVisible", CoreStrings.Flowpath_T

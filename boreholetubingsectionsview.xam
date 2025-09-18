@@ -1,0 +1,61 @@
+<local:WellEditorValidationUpdate x:Class="Slb.Production.Engineering.Views.Well.Tubulars.BoreholeTubingSectionsView"
+                                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                  xmlns:ui="https://slb.production.engineering.ui"
+                                  xmlns:local="clr-namespace:Slb.Production.Engineering.Views.Well"
+                                  xmlns:str_properties="clr-namespace:Slb.Production.Engineering.Model.StandardDomain.Properties;assembly=Slb.Production.Engineering.Model.StandardDomain"
+                                  xmlns:tubulars="clr-namespace:Slb.Production.Engineering.Views.Well.Tubulars">
+  <Grid>
+    <ui:CustomDataGrid Name="DetailedViewTubingGrid" FixTextBoxValidationBehavior="true" LimitVisibleRows="true"
+                       SelectionUnit="FullRow" VisibleRowCount="10" ItemsSource="{Binding TubingSections}"
+                       DeleteSelectedItemsCommand="{Binding DeleteSelectedItemsCommand}"
+                       ui:DataGridMultipleSelection.SelectedItemsSource="{Binding SelectedDetailedTubings}">
+      <FrameworkElement.BindingGroup>
+        <BindingGroup NotifyOnValidationError="true">
+          <BindingGroup.ValidationRules>
+            <tubulars:TubingDetailedViewValidation/>
+          </BindingGroup.ValidationRules>
+        </BindingGroup>
+      </FrameworkElement.BindingGroup>
+      <ui:CustomDataGrid.Columns>
+        <ui:CustomDataGridTextColumn Header="{x:Static str_properties:CoreStrings.Name}"
+                                     Binding="{Binding ViewModel.Name, UpdateSourceTrigger=LostFocus}"/>
+        <ui:CustomDataGridUnitColumn Header="{x:Static str_properties:CoreStrings.ToMD}" UnitMeasurement="Measured_Depth"
+                                     Binding="{Binding ViewModel.BottomMD, UpdateSourceTrigger=LostFocus}"/>
+        <ui:CustomDataGridUnitColumn Header="{x:Static str_properties:CoreStrings.InsideDiameter_SN}" UnitMeasurement="Inside_Diameter"
+                                     Binding="{Binding ViewModel.InD, UpdateSourceTrigger=LostFocus}"/>
+        <ui:CustomDataGridUnitColumn Header="{x:Static str_properties:CoreStrings.WallThickness}" UnitMeasurement="Tube_Wall_Thickness"
+                                     Binding="{Binding ViewModel.WallThickness, UpdateSourceTrigger=LostFocus}"
+                                     Visibility="{Binding Path=(FrameworkElement.DataContext).EnterODValue, RelativeSource={x:Static RelativeSource.Self}, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InvBoolToVis}}"/>
+        <ui:CustomDataGridUnitColumn Header="{x:Static str_properties:CoreStrings.OutsideDiameter_SN}"
+                                     UnitMeasurement="Outside_Diameter"
+                                     Binding="{Binding ViewModel.OutD, UpdateSourceTrigger=LostFocus}"
+                                     Visibility="{Binding Path=(FrameworkElement.DataContext).EnterODValue, RelativeSource={x:Static RelativeSource.Self}, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVis}}"/>
+        <ui:CustomDataGridUnitColumn Header="{x:Static str_properties:CoreStrings.Roughness}" UnitMeasurement="Absolute_Roughness"
+                                     Binding="{Binding ViewModel.SectionRoughness, UpdateSourceTrigger=LostFocus}"/>
+        <ui:CustomDataGridTemplateColumn ui:DataGridExtension.InputSize="ExtraSmall">
+          <DataGridColumn.HeaderTemplate>
+            <DataTemplate>
+              <Image Source="/Slb.Production.Engineering.UI;component/Images/tubingcat_16.png"
+                     ToolTip="{x:Static str_properties:CoreStrings.ToolTip_UseTubingCatalog}"/>
+            </DataTemplate>
+          </DataGridColumn.HeaderTemplate>
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <Button x:Name="button_TubingCat" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                      Content="{x:Static str_properties:CoreStrings.DotDotDot}" ui:ButtonExtension.IsTool="true"
+                      Padding="0" Margin="0" HorizontalContentAlignment="Center" ToolTip="{Binding ViewModel.Tooltip}"
+                      Command="{Binding DataContext.TubingCasingCatalogCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ui:CustomDataGrid}}}"
+                      CommandParameter="{Binding}"/>
+              <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding Data}" Value="{x:Null}">
+                  <Setter TargetName="button_TubingCat" Property="UIElement.IsEnabled" Value="false"/>
+                </DataTrigger>
+              </DataTemplate.Triggers>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </ui:CustomDataGridTemplateColumn>
+      </ui:CustomDataGrid.Columns>
+    </ui:CustomDataGrid>
+  </Grid>
+</local:WellEditorValidationUpdate>

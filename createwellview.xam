@@ -1,0 +1,23 @@
+<UserControl x:Class="Slb.Production.Engineering.Views.Well.CreateWellView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:common="https://slb.production.engineering.common"
+             xmlns:ui="https://slb.production.engineering.ui"
+             xmlns:str_properties="clr-namespace:Slb.Production.Engineering.Model.StandardDomain.Properties;assembly=Slb.Production.Engineering.Model.StandardDomain">
+  <ui:CustomExpander Grid.IsSharedSizeScope="true">
+    <StackPanel>
+      <ContentControl>
+        <ui:CollectionContentItem Label="{x:Static str_properties:CoreStrings.WellImportFromTemplate}"
+                                  DisplayMemberPath="DisplayName" Collection="{Binding Templates}"
+                                  SelectedValue="{Binding SelectedTemplate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+      </ContentControl>
+      <ContentControl Visibility="{Binding CanImportWell, Converter={StaticResource BoolToVis}}">
+        <ui:LabledStringContentItem Label="{x:Static str_properties:CoreStrings.WellImportFromModel}" IsReadOnly="false"
+                                    CommandDialogType="OpenFile" CommandParameter="{x:Static str_properties:CoreStrings.SaveAsFilter}"
+                                    ToolTip="{x:Static str_properties:CoreStrings.ImportWellButtonToolTip}"
+                                    Value="{Binding ImportWellPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    Command="{Binding Path=ImportWellCommand}"/>
+      </ContentControl>
+    </StackPanel>
+  </ui:CustomExpander>
+</UserControl>
